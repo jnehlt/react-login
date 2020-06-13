@@ -4,6 +4,10 @@ import AppBar from "material-ui/AppBar";
 import RaisedButton from "material-ui/RaisedButton";
 import TextField from "material-ui/TextField";
 import Axios from "axios";
+import statsScreen from "./StatsScreen";
+import { func } from "prop-types";
+import StatsScreen from "./StatsScreen";
+import Post from "./Post";
 
 const apiBaseUrl = "http://localhost:8080";
 
@@ -41,10 +45,11 @@ class Login extends Component {
     this.state = {
       login: "",
       password: "",
+      token: "",
       loginComponent: localloginComponent,
     };
   }
-  componentWillMount() {
+  componentDidMount() {
     var localloginComponent = [];
     localloginComponent.push(
       <MuiThemeProvider key={"theme"}>
@@ -78,17 +83,38 @@ class Login extends Component {
       login: this.state.login,
       password: this.state.password
     };
+    let currentComponent = this;
+    let statsScreen = [];
+    let postScreen = [];
+
     Axios.post(apiBaseUrl + "/login", payload, {
-      headers: {
-        "Access-Control-Allow-Origin": "*"
-      },
     })
       .then(function (response) {
-        console.log(response);
+        currentComponent.setState({token: response.headers.authorization});
         if (response.status === 200) {
-          console.log("Udane logowanie!");
-          // TU DODAJ PRZEKIEROWANIE DO STRONY ZE STATSAMI
-	} else {
+          fetch('http://localhost:8080/events', {
+            headers: new Headers({
+              'Authorization': currentComponent.state.token,
+              'Content-Type': 'application/x-www-form-urlencoded'
+            })
+          }).then( function (response2){
+            if (response2.status === 200) {
+              statsScreen.push(<StatsScreen
+              parentContext={this}
+              appContext={response.headers.authorization}
+              />);
+              currentComponent.setState({ loginComponent: statsScreen })
+            } else {
+                postScreen.push(<Post 
+                  parentContext={this}
+                  appContext={response.headers.authorization}
+                />);
+                currentComponent.setState({ loginComponent: postScreen})
+              console.log(currentComponent.state.token)
+            }
+          });
+          
+	      } else {
           console.log("Podany użytkownik nie istnieje");
           alert("Podany użytkownik nie istnieje");
         }
@@ -99,10 +125,7 @@ class Login extends Component {
   }
   render() {
     return (
-      <div>
-        <MuiThemeProvider>
-          <AppBar title="Zaloguj" />
-        </MuiThemeProvider>
+      <div id='login'>
         {this.state.loginComponent}
       </div>
     );

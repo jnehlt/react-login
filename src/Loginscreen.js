@@ -16,7 +16,7 @@ class Loginscreen extends Component {
     loginButtons.push(
       <div key={"Login-Div"}>
         <MuiThemeProvider>
-          <div>
+          <div id='register'>
             <RaisedButton
               label={"Zarejestruj"}
               primary={true}
@@ -37,7 +37,7 @@ class Loginscreen extends Component {
       isLogin: true,
     };
   }
-  componentWillMount() {
+  componentDidMount() {
     let loginscreen = [];
     loginscreen.push(
       <Login
@@ -85,9 +85,9 @@ class Loginscreen extends Component {
       let loginscreen = [],
         loginButtons = [];
       loginButtons.push(
-        <div>
+        <div id='register'>
           <MuiThemeProvider>
-            <div>
+            <div id='register'>
               <RaisedButton
                 label={"Zarejestruj"}
                 primary={true}
@@ -114,7 +114,7 @@ class Loginscreen extends Component {
     return (
       <div className="loginscreen" key="loginscreen">
         {this.state.loginscreen}
-        <div>
+        <div id='register'>
           {this.state.loginmessage}
           {this.state.loginButtons}
         </div>

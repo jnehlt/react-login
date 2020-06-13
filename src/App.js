@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import "./App.css";
 import LoginScreen from "./Loginscreen";
+import StateScreen from "./StatsScreen";
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -8,7 +10,7 @@ class App extends Component {
       loginPage: [],
     };
   }
-  componentWillMount() {
+  componentDidMount() {
     var loginPage = [];
     loginPage.push(<LoginScreen appContext={this} key={"login-screen"} />);
     this.setState({
